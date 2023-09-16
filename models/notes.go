@@ -1,13 +1,13 @@
 package models
 
 type Note struct {
-	Id         string `json:"id"`
+	Id         int `json:"id"`
 	Title      string `json:"title"`
 	Slug       string `json:"slug"`
 	Body       string `json:"body"`
 	Category   string `json:"category"`
-	Created_at string `json:"created_at"`
-	Updated_at string `json:"updated_at"`
+Created_at string `json:"created_at"`
+Updated_at string `json:"updated_at"`
 }
 
 type Notes struct {
