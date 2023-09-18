@@ -1,4 +1,4 @@
-package cmd
+package local_storage
 
 import (
 	"encoding/json"
@@ -13,6 +13,8 @@ import (
 	"github.com/Delta456/box-cli-maker/v2"
 	"github.com/spf13/cobra"
 )
+
+var NotesDir string = os.Getenv("HOME") + "/.roger/notes"
 
 
 func check(e error) {
@@ -62,7 +64,9 @@ func getNoteById (notes []models.Note, id int) (models.Note, error) {
     return models.Note{}, errors.New("Note not found")
 }
 
-func getNoteBySlug (notes []models.Note, slug string) (models.Note, error) {
+func GetNoteBySlug (slug string) (models.Note, error) {
+    notes, err := readNotesFile()
+    check(err)
     for _, note := range notes {
         if note.Slug == slug {
             return note, nil
@@ -71,7 +75,9 @@ func getNoteBySlug (notes []models.Note, slug string) (models.Note, error) {
     return models.Note{}, errors.New("Note not found")
 }
 
-func getNotesByCategory (notes []models.Note, category string) ([]models.Note, error) {
+func GetNotesByCategory (category string) ([]models.Note, error) {
+    notes, err := readNotesFile()
+    check(err)
     var tmp_notes []models.Note
     for _, note := range notes {
         if note.Category == category {
@@ -85,7 +91,7 @@ func getNotesByCategory (notes []models.Note, category string) ([]models.Note, e
 }
 
 func ReadNotes(cmd *cobra.Command, args []string) {
-    log.SetPrefix("notes.go: ")
+    log.SetPrefix("local_storage.go: ")
     log.SetFlags(log.LstdFlags | log.Lshortfile)
 	notes, err := readNotesFile()
 	check(err)
@@ -99,4 +105,22 @@ func ReadNotes(cmd *cobra.Command, args []string) {
 	} else {
         ListNotes(notes)
 	}
+}
+
+func AddNote (note models.Note) {
+    notes, err := readNotesFile()
+    check(err)
+
+    notes = append(notes, note)
+    data, err := json.Marshal(notes)
+    check(err)
+
+    err = os.WriteFile("notes.json", data, 0644)
+    check(err)
+}
+
+func GetNextId () int {
+    notes, err := readNotesFile()
+    check(err)
+    return len(notes) + 1
 }

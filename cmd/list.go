@@ -6,14 +6,14 @@ package cmd
 
 import (
 
-    utils "github.com/iamcaye/roger/utils"
+    repo "github.com/iamcaye/roger/local_storage"
 	"github.com/spf13/cobra"
 )
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief description of your command",
+	Use:   "list | list [id]",
+	Short: "List all notes or a specific note",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -21,7 +21,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-        utils.ReadNotes(cmd, args)
+        repo.ReadNotes(cmd, args)
 	},
 }
 
