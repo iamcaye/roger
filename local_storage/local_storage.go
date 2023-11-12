@@ -36,6 +36,10 @@ func readNotesFile() ([]models.Note, error) {
 func printNote(note models.Note) {
     title  := fmt.Sprintf("[ %v ]", note.Title)
     Box := box.New(box.Config{Px: 1, Py: 0, Type: "Classic", Color: "White", TitlePos: "Top", AllowWrapping: true})
+    if len(title) > len(note.Body) {
+        note.Body = fmt.Sprintf("%-*v", len(title) - len(note.Body)+5, note.Body)
+        fmt.Println(note.Body)
+    }
     Box.Print(title, note.Body)
 }
 
@@ -122,5 +126,8 @@ func AddNote (note models.Note) {
 func GetNextId () int {
     notes, err := readNotesFile()
     check(err)
-    return len(notes) + 1
+    if len(notes) == 0 {
+        return 1
+    }
+    return notes[len(notes)-1].Id + 1
 }
